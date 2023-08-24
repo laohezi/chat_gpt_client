@@ -6,6 +6,8 @@ import 'package:get/utils.dart';
 
 class MessageModel {
 
+  MessageModel();
+
   String conversationId = "";
    getMessages(ValueChanged<Message> onResponse, ValueChanged<Message> onError, ValueChanged<Message> onSuccess) async {
     // Mock data
