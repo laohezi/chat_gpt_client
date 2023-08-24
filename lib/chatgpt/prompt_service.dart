@@ -18,45 +18,44 @@ class PromptService {
   }
 }
 
-
-abstract class LLM{
-
-  getResponse(List<Message> messages,ValueChanged<Message> onResponse,ValueChanged<Message> onError,ValueChanged<Message> onSuccess );
+abstract class LLM {
+  getResponse(List<Message> messages, ValueChanged<Message> onResponse,
+      ValueChanged<Message> onError, ValueChanged<Message> onSuccess);
   Future<OpenAIChatCompletionModel> getResponseSync(List<Message> messages);
   init();
-
-
 }
 
-class ChatGpt extends LLM{
+class ChatGpt extends LLM {
   static final ChatGpt _instance = ChatGpt();
-  factory ChatGpt(){
+  factory ChatGpt() {
     return _instance;
   }
 
-
   @override
-  getResponse(List<Message> messages, ValueChanged<Message> onResponse, ValueChanged<Message> onError, ValueChanged<Message> onSuccess) {
+  getResponse(List<Message> messages, ValueChanged<Message> onResponse,
+      ValueChanged<Message> onError, ValueChanged<Message> onSuccess) {
     OpenAI.instance.model.list();
 
     List<OpenAIChatCompletionChoiceMessageModel> ms = [];
     String content = "";
-    for(Message message in messages){
-      content = content +message.text;
-      ms.insert(0, OpenAIChatCompletionChoiceMessageModel(role: message.role.asOpenAIChatMessageRole, content: message.text));
+    for (Message message in messages) {
+      content = content + message.text;
+      ms.insert(
+          0,
+          OpenAIChatCompletionChoiceMessageModel(
+              role: message.role.asOpenAIChatMessageRole,
+              content: message.text));
     }
-    var message = Message(
-        conversationId: "",
-        text: "",
-        role: Role.assistant);
-    Stream<OpenAIStreamChatCompletionModel>stream = OpenAI.instance.chat.createStream(model: 'gpt-3.5-turbo', messages: ms);
+    var message = Message(conversationId: "", text: "", role: Role.assistant);
+    Stream<OpenAIStreamChatCompletionModel> stream =
+        OpenAI.instance.chat.createStream(model: 'gpt-3.5-turbo', messages: ms);
 
     stream.listen((event) {
-      if(event.choices.first.delta.content !=null){
+      if (event.choices.first.delta.content != null) {
         message.text = message.text + event.choices.first.delta.content!;
         onResponse(message);
       }
-    },onDone: (){
+    }, onDone: () {
       onSuccess(message);
     });
   }
@@ -64,7 +63,7 @@ class ChatGpt extends LLM{
   @override
   init() {
     OpenAI.baseUrl = "https://oa.api2d.net";
-    OpenAI.apiKey = TokenManager.readToken();
+    OpenAI.apiKey = SettingDataSource.readToken();
   }
 
   @override
@@ -73,38 +72,30 @@ class ChatGpt extends LLM{
 
     List<OpenAIChatCompletionChoiceMessageModel> ms = [];
     String content = "";
-    for(Message message in messages){
-      content = content +message.text;
-      ms.insert(0, OpenAIChatCompletionChoiceMessageModel(role: message.role.asOpenAIChatMessageRole, content: message.text));
+    for (Message message in messages) {
+      content = content + message.text;
+      ms.insert(
+          0,
+          OpenAIChatCompletionChoiceMessageModel(
+              role: message.role.asOpenAIChatMessageRole,
+              content: message.text));
     }
-    var message = Message(
-        conversationId: "",
-        text: "",
-        role: Role.assistant);
+    var message = Message(conversationId: "", text: "", role: Role.assistant);
     return OpenAI.instance.chat.create(model: 'gpt-3.5-turbo', messages: ms);
-
-
   }
-
 }
 
-extension Convert on Role{
-  OpenAIChatMessageRole get asOpenAIChatMessageRole{
-    switch(this){
-
-
+extension Convert on Role {
+  OpenAIChatMessageRole get asOpenAIChatMessageRole {
+    switch (this) {
       case Role.system:
-      return OpenAIChatMessageRole.system;
+        return OpenAIChatMessageRole.system;
 
       case Role.user:
-       return OpenAIChatMessageRole.user;
+        return OpenAIChatMessageRole.user;
 
       case Role.assistant:
-      return  OpenAIChatMessageRole.assistant;
-
+        return OpenAIChatMessageRole.assistant;
     }
   }
-
-
-
 }

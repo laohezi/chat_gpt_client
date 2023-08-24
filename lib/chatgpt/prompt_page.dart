@@ -12,7 +12,7 @@ class PromptPage extends StatelessWidget {
         title: Text('Prompt'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: PromptList(),
       ),
     );
@@ -35,8 +35,8 @@ class _PromptListState extends State<PromptList> {
     _getPrompts();
   }
 
-  Future<void> _getPrompts() async{
-    final prompts =  await PromptService.getPrompts();
+  Future<void> _getPrompts() async {
+    final prompts = await PromptService.getPrompts();
     setState(() {
       _prompts = prompts;
       _isLoading = false;
@@ -56,15 +56,15 @@ class _PromptListState extends State<PromptList> {
     return ListView.builder(
       itemCount: _prompts.length,
       itemBuilder: (context, index) {
-        return Card( // 使用 Card 包装 ListTile
+        return Card(
+            // 使用 Card 包装 ListTile
             child: ListTile(
-              title: Text(_prompts[index]),
-
-              onTap: () {
-                final prompt = _prompts[index];
-                // Do something with selected prompt
-              },
-            ));
+          title: Text(_prompts[index]),
+          onTap: () {
+            final prompt = _prompts[index];
+            // Do something with selected prompt
+          },
+        ));
       },
     );
   }

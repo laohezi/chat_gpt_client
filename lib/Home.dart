@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return HomePageState();
   }
 }
 
-
 class HomePageState extends State<HomePage> {
   var selectIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Home")),
-      body: Center(
+      appBar: AppBar(title: const Text("Home")),
+      body: const Center(
         child: Text("Home"),
       ),
       bottomNavigationBar: BottomNavaigation(),
@@ -22,32 +23,26 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-class BottomNavaigation extends StatefulWidget{
+// ignore: must_be_immutable
+class BottomNavaigation extends StatefulWidget {
   ValueChanged<int>? onTabTapped;
-  BottomNavaigation(
-  {
-    this.onTabTapped
-}
-      ):super();
+  BottomNavaigation({super.key, this.onTabTapped});
   @override
   State<StatefulWidget> createState() {
     return BottomNavaigationState();
   }
 }
 
-class BottomNavaigationState extends State<BottomNavaigation>{
+class BottomNavaigationState extends State<BottomNavaigation> {
   var selectIndex = 0;
-  
-
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: [
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: "Promp",
-
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.chat),
@@ -59,12 +54,11 @@ class BottomNavaigationState extends State<BottomNavaigation>{
         ),
       ],
       currentIndex: selectIndex,
-      onTap: (index){
+      onTap: (index) {
         setState(() {
           selectIndex = index;
         });
       },
     );
   }
-
 }
