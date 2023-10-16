@@ -1,7 +1,10 @@
+import 'package:chat_gpt_client/chatgpt/Theme.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_client/chatgpt/chat_page.dart';
 import 'package:chat_gpt_client/chatgpt/prompt_page.dart';
 import 'package:chat_gpt_client/chatgpt/setting_page.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -12,11 +15,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+   var window = WidgetsBinding.instance.window;
+   window.onPlatformBrightnessChanged = (){
+      Provider.of<ThemeProvider>(context, listen: false).changeThemeModeBySystem(context);
+   };
+
+
     return MaterialApp(
      // title: 'Your App Name Here',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+     theme: Provider.of<ThemeProvider>(context).current,
       home: HomePage(),
      /* routes: {
         // 页面路由
@@ -27,6 +34,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
 
 class HomePage extends StatefulWidget {
   @override

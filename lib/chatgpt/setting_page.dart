@@ -20,7 +20,7 @@ class SettingPageState extends State<SettingPage> {
     // 读取已经持久化的 token
     String token = SettingDataSource.readToken();
     _textEditingController.text = token;
-    String  url = 
+
   }
 
   @override
