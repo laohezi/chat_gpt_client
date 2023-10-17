@@ -34,10 +34,10 @@ class ThemeConfig {
         primaryColor: Colors.cyan,
         brightness: Brightness.dark,
         backgroundColor: Colors.greenAccent,
-        scaffoldBackgroundColor: Colors.white,
+        //scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           elevation: 0,
-          color: Colors.white,
+       //   color: Colors.white,
           iconTheme: IconThemeData(
             color: Colors.greenAccent,
           ),
@@ -48,8 +48,9 @@ class ThemeConfig {
         primarySwatch: Colors.blue,
         primaryColor: Colors.blue,
         brightness: Brightness.dark,
-        backgroundColor: Colors.cyan,
-        scaffoldBackgroundColor: Colors.white,
+
+
+        primaryColorDark: Colors.blue,
         appBarTheme: const AppBarTheme(
           elevation: 0,
           color: Colors.white,

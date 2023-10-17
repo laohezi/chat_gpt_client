@@ -6,36 +6,33 @@ import 'package:chat_gpt_client/chatgpt/setting_page.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-
-
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider<ThemeProvider>(
+    create: (context) => ThemeProvider(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   var window = WidgetsBinding.instance.window;
-   window.onPlatformBrightnessChanged = (){
-      Provider.of<ThemeProvider>(context, listen: false).changeThemeModeBySystem(context);
-   };
-
-
+    var window = WidgetsBinding.instance.window;
+    window.onPlatformBrightnessChanged = () {
+      Provider.of<ThemeProvider>(context, listen: false)
+          .changeThemeModeBySystem(context);
+    };
     return MaterialApp(
-     // title: 'Your App Name Here',
-     theme: Provider.of<ThemeProvider>(context).current,
-      home: HomePage(),
-     /* routes: {
-        // 页面路由
-        PromptPage.routeName: (context) => PromptPage(),
-        ChatPage.routeName: (context) => ChatPage(),
-        SettingPage.routeName: (context) => SettingPage(),
-      },*/
-    );
+      title: 'Chat GPT Client',
+      theme: Provider.of<ThemeProvider>(context).current,
+      home:Builder(
+        builder: (context) {
+          Provider.of<ThemeProvider>(context).current;
+          return HomePage();
+        },
+      )
+      );
   }
 }
-
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -60,7 +57,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
