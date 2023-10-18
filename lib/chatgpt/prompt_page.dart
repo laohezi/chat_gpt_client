@@ -7,6 +7,8 @@ class PromptPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData currentTheme = Theme.of(context);
+    print(currentTheme);
     return Scaffold(
       appBar: AppBar(
         title: Text('Prompt'),

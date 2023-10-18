@@ -7,30 +7,26 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider<ThemeProvider>(
-    create: (context) => ThemeProvider(),
-    child: MyApp(),
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    var window = WidgetsBinding.instance.window;
-    window.onPlatformBrightnessChanged = () {
-      Provider.of<ThemeProvider>(context, listen: false)
-          .changeThemeModeBySystem(context);
-    };
-    return MaterialApp(
-      title: 'Chat GPT Client',
-      theme: Provider.of<ThemeProvider>(context).current,
-      home:Builder(
-        builder: (context) {
-          Provider.of<ThemeProvider>(context).current;
-          return HomePage();
+     return ChangeNotifierProvider(
+      create: (_) => ThemeModel(),
+      child: Consumer<ThemeModel>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Chat GPT Client',
+            theme: themeProvider.getCurrent(),
+            home: HomePage(),
+          );
         },
       )
-      );
+     );
   }
 }
 

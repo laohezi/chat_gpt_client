@@ -1,30 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ThemeProvider with ChangeNotifier {
+class ThemeModel with ChangeNotifier, WidgetsBindingObserver {
   ThemeData lightTheme = ThemeConfig.lightTheme;
   ThemeData darkTheme = ThemeConfig.darkTheme;
   ThemeMode themeMode = ThemeConfig.defaultThemeMode;
 
-  void changeThemeModeBySystem(BuildContext context) {
-    print("change theme");
-    if (themeMode == ThemeMode.system) {
-      var brightness = MediaQuery.of(context).platformBrightness;
-      if (brightness == Brightness.dark) {
-        themeMode = ThemeMode.dark;
-      } else {
-        themeMode = ThemeMode.light;
-      }
-      notifyListeners();
-    }
+  ThemeModel() {
+    debugPrint("init ThemeModel");
+    WidgetsBinding.instance.addObserver(this);
   }
 
-  ThemeData get current {
+  @override
+  void didChangePlatformBrightness() {
+    var brightness = WidgetsBinding.instance!.window.platformBrightness;
+    if (brightness == Brightness.dark) {
+      themeMode = ThemeMode.dark;
+    } else {
+      themeMode = ThemeMode.light;
+    }
+    debugPrint("theme changed to be ${themeMode.name}");
+
+    notifyListeners();
+  }
+
+  ThemeData getCurrent() {
+    debugPrint("get current returned " + themeMode.name);
     if (themeMode == ThemeMode.light) {
       return lightTheme;
     } else {
       return darkTheme;
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
   }
 }
 
@@ -37,7 +50,7 @@ class ThemeConfig {
         //scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           elevation: 0,
-       //   color: Colors.white,
+          //   color: Colors.white,
           iconTheme: IconThemeData(
             color: Colors.greenAccent,
           ),
@@ -48,8 +61,6 @@ class ThemeConfig {
         primarySwatch: Colors.blue,
         primaryColor: Colors.blue,
         brightness: Brightness.dark,
-
-
         primaryColorDark: Colors.blue,
         appBarTheme: const AppBarTheme(
           elevation: 0,
