@@ -26,43 +26,36 @@ class SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
             TextField(
-            controller: _textEditingController,
-            decoration: const InputDecoration(
-              labelText: 'Token',
-              hintText: 'Enter your token',
+              controller: _textEditingController,
+              decoration: const InputDecoration(
+                labelText: 'Token',
+                hintText: 'Enter your token',
+              ),
             ),
-          ),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            child: const Text('Save'),
-            onPressed: () {
-              final token = _textEditingController.text;
-              SettingDataSource.saveToken(token); // 保存 token
-              // Navigator.pop(context); // 返回上一个页面
-            },
-          ),
-          Consumer<ThemeModel>(builder: (context, theme, child) {
-            return ElevatedButton(
-              child: const Text('Switch Theme'),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              child: const Text('Save'),
               onPressed: () {
-                theme.switchTheme();
+                final token = _textEditingController.text;
+                SettingDataSource.saveToken(token); // 保存 token
+                // Navigator.pop(context); // 返回上一个页面
               },
-            );
-          }
-
-          )
-      ]),
-    ),
+            ),
+            Consumer<ThemeModel>(builder: (context, theme, child) {
+              return ElevatedButton(
+                child: const Text('Switch Theme'),
+                onPressed: () {
+                  theme.switchTheme();
+                },
+              );
+            })
+          ]),
     );
   }
 }

@@ -3,20 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:chat_gpt_client/chatgpt/prompt_service.dart';
 
 class PromptPage extends StatelessWidget {
-  static const routeName = '/prompt'; // 页面路由名称
+  static const routeName = '/prompt';
+
+  const PromptPage({super.key}); // 页面路由名称
 
   @override
   Widget build(BuildContext context) {
     ThemeData currentTheme = Theme.of(context);
     print(currentTheme);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Prompt'),
-      ),
-      body: Padding(
+    return Padding(
         padding: const EdgeInsets.all(16.0),
         child: PromptList(),
-      ),
     );
   }
 }

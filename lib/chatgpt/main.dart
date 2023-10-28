@@ -1,10 +1,11 @@
 import 'package:chat_gpt_client/chatgpt/Theme.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_gpt_client/chatgpt/chat_page.dart';
-import 'package:chat_gpt_client/chatgpt/prompt_page.dart';
-import 'package:chat_gpt_client/chatgpt/setting_page.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:chat_gpt_client/chatgpt/NaviBar/NaviModel.dart';
+
+import 'chat_page.dart';
+import 'prompt_page.dart';
+import 'setting_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,65 +16,52 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return ChangeNotifierProvider(
-      create: (_) => ThemeModel(),
-      child: Consumer<ThemeModel>(
-        builder: (context, themeProvider, child) {
-          return MaterialApp(
-            title: 'Chat GPT Client',
-            theme: themeProvider.getCurrent(),
-            home: HomePage(),
-          );
-        },
-      )
-     );
+    return ChangeNotifierProvider(
+        create: (_) => ThemeModel(),
+        child: Consumer<ThemeModel>(
+          builder: (context, themeProvider, child) {
+            return MaterialApp(
+              title: 'Chat GPT Client',
+              theme: themeProvider.getCurrent(),
+              home: const HomePage(),
+            );
+          },
+        ));
   }
 }
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = <Widget>[
-    PromptPage(),
-    ChatPage(),
-    SettingPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    print('onItemTaped');
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Prompt',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => NaviModel()),
+        ChangeNotifierProvider(create: (context) => HomeModel())
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Consumer2<NaviModel, HomeModel>(
+            builder: (context, naviModel, homeModel, child) {
+              return Text(homeModel.title[naviModel.selectedIndex]);
+            },
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        ),
+        body: Consumer<NaviModel>(
+          builder: (context, naviModel, child) {
+            return IndexedStack(
+              index: naviModel.selectedIndex,
+              children: [PromptPage(), ChatPage(), SettingPage()],
+            );
+          },
+        ),
+        bottomNavigationBar: BottomNavi(),
       ),
     );
   }
+}
+
+class HomeModel extends ChangeNotifier {
+  List<String> title = ['Prompt', 'Chat', 'Settings'];
 }

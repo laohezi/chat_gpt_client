@@ -10,14 +10,9 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chat'),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: ChatList(),
-      ),
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: ChatList(),
     );
   }
 }
@@ -35,7 +30,6 @@ class ChatListState extends State<ChatList> {
 
   var textEditingController = TextEditingController();
   var model = MessageModel();
-
 
   @override
   void initState() {
