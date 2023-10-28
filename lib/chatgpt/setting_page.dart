@@ -1,4 +1,6 @@
+import 'package:chat_gpt_client/chatgpt/Theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'TokenManager.dart';
 
@@ -20,7 +22,6 @@ class SettingPageState extends State<SettingPage> {
     // 读取已经持久化的 token
     String token = SettingDataSource.readToken();
     _textEditingController.text = token;
-
   }
 
   @override
@@ -30,29 +31,38 @@ class SettingPageState extends State<SettingPage> {
         title: const Text('Settings'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
             TextField(
-              controller: _textEditingController,
-              decoration: const InputDecoration(
-                labelText: 'Token',
-                hintText: 'Enter your token',
-              ),
+            controller: _textEditingController,
+            decoration: const InputDecoration(
+              labelText: 'Token',
+              hintText: 'Enter your token',
             ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              child: const Text('Save'),
+          ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            child: const Text('Save'),
+            onPressed: () {
+              final token = _textEditingController.text;
+              SettingDataSource.saveToken(token); // 保存 token
+              // Navigator.pop(context); // 返回上一个页面
+            },
+          ),
+          Consumer<ThemeModel>(builder: (context, theme, child) {
+            return ElevatedButton(
+              child: const Text('Switch Theme'),
               onPressed: () {
-                final token = _textEditingController.text;
-                SettingDataSource.saveToken(token); // 保存 token
-                // Navigator.pop(context); // 返回上一个页面
+                theme.switchTheme();
               },
-            )
-          ],
-        ),
-      ),
+            );
+          }
+
+          )
+      ]),
+    ),
     );
   }
 }

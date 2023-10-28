@@ -4,7 +4,9 @@ import 'package:chat_gpt_client/chatgpt/user_service.dart';
 import 'message_service.dart';
 
 class ChatPage extends StatelessWidget {
-  static const routeName = '/chat'; // 页面路由名称
+  static const routeName = '/chat';
+
+  const ChatPage({super.key}); // 页面路由名称
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +14,8 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Chat'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: ChatList(),
       ),
     );
@@ -21,11 +23,13 @@ class ChatPage extends StatelessWidget {
 }
 
 class ChatList extends StatefulWidget {
+  const ChatList({super.key});
+
   @override
-  _ChatListState createState() => _ChatListState();
+  ChatListState createState() => ChatListState();
 }
 
-class _ChatListState extends State<ChatList> {
+class ChatListState extends State<ChatList> {
   final List<String> _messages = [];
   bool _isLoading = false;
 
@@ -46,7 +50,7 @@ class _ChatListState extends State<ChatList> {
             _messages.add(message.text);*/
       });
     }, (error) {
-      print(error);
+      debugPrint(error.text ?? "error");
     }, (success) {
       setState(() {
         _isLoading = false;

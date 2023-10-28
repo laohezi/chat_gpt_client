@@ -33,6 +33,15 @@ class ThemeModel with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
+  void switchTheme() {
+    if (themeMode == ThemeMode.light) {
+      themeMode = ThemeMode.dark;
+    } else {
+      themeMode = ThemeMode.light;
+    }
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -45,16 +54,10 @@ class ThemeConfig {
   static ThemeData get lightTheme => ThemeData(
         primarySwatch: Colors.cyan,
         primaryColor: Colors.cyan,
-        brightness: Brightness.dark,
+        brightness: Brightness.light,
         backgroundColor: Colors.greenAccent,
         //scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          //   color: Colors.white,
-          iconTheme: IconThemeData(
-            color: Colors.greenAccent,
-          ),
-        ),
+
       );
 
   static ThemeData get darkTheme => ThemeData(
@@ -62,13 +65,6 @@ class ThemeConfig {
         primaryColor: Colors.blue,
         brightness: Brightness.dark,
         primaryColorDark: Colors.blue,
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          color: Colors.white,
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-        ),
       );
 
   static ThemeMode get defaultThemeMode => ThemeMode.system;
