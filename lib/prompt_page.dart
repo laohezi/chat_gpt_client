@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:chat_gpt_client/chatgpt/prompt_service.dart';
+import 'package:chat_gpt_client/prompt_service.dart';
 
 class PromptPage extends StatelessWidget {
   static const routeName = '/prompt';

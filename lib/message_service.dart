@@ -1,8 +1,9 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
-import 'package:chat_gpt_client/chatgpt/prompt_service.dart';
 import 'package:chat_gpt_client/model/entities.dart';
 import 'package:get/utils.dart';
+
+import 'prompt_service.dart';
 
 class MessageModel {
 

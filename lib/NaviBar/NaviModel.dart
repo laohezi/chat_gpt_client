@@ -12,6 +12,7 @@ class NaviModel extends ChangeNotifier {
     const BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
     const BottomNavigationBarItem(
         icon: Icon(Icons.settings), label: 'Settings'),
+
   ];
 
   void setIndex(int index) {
