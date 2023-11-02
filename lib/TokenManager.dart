@@ -4,6 +4,7 @@ import 'package:get/utils.dart';
 
 class SettingDataSource {
   static GetStorage storage = GetStorage();
+
   // 读取 token
   static String readToken() {
     GetStorage storage = GetStorage();
@@ -20,11 +21,28 @@ class SettingDataSource {
     GetStorage storage = GetStorage();
     return storage.optReadString('url', "https://oa.api2d.net");
   }
+
+  static saveUrl(String url) {
+    storage.write('url', url);
+  }
+
+  static readModel() {
+    GetStorage storage = GetStorage();
+    return storage.optReadString('model', "gpt-3.5-turbo");
+  }
+
+  static saveModel(String model) {
+    storage.write('model', model);
+  }
+
+  static List<String> getModelList() {
+    List<String> modelList = ["davinci", "curie", "babbage", "ada", "content-filter-alpha-c4", "content-filter-dev"];
+    return modelList;
+  }
 }
 
 extension StorageExtention on GetStorage {
   String optReadString(String key, String defaultValue) {
-    print("get token");
     String? raw = read<String>(key);
     if (raw != null && raw.isNotEmpty) {
       return raw;

@@ -4,51 +4,46 @@ import 'package:provider/provider.dart';
 
 import 'TokenManager.dart';
 
+class SettingPage extends StatelessWidget {
+  final TextEditingController _tokeTextController = TextEditingController();
+  final TextEditingController _urlTextController = TextEditingController();
 
-
-class SettingPage extends StatefulWidget {
-  static const routeName = '/setting';
-
-  const SettingPage({super.key}); // 页面路由名称
-
-  @override
-  SettingPageState createState() => SettingPageState();
-}
-
-class SettingPageState extends State<SettingPage> {
-  final TextEditingController _textEditingController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    // 读取已经持久化的 token
-    String token = SettingDataSource.readToken();
-    _textEditingController.text = token;
-  }
+  SettingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    _tokeTextController.text = SettingDataSource.readToken() ?? '';
+    _urlTextController.text = SettingDataSource.readUrl() ?? '';
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             TextField(
-              controller: _textEditingController,
+              controller: _tokeTextController,
               decoration: const InputDecoration(
                 labelText: 'Token',
                 hintText: 'Enter your token',
               ),
             ),
+            TextField(
+              controller: _urlTextController,
+              decoration: const InputDecoration(
+                labelText: 'BaseUrl',
+                hintText: 'Enter your baseUrl',
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            ChatModel(),
             const SizedBox(height: 16.0),
             ElevatedButton(
               child: const Text('Save'),
               onPressed: () {
-                final token = _textEditingController.text;
+                final token = _tokeTextController.text;
                 SettingDataSource.saveToken(token); // 保存 token
-                // Navigator.pop(context); // 返回上一个页面
               },
             ),
+            const SizedBox(height: 16.0),
             Consumer<ThemeModel>(builder: (context, theme, child) {
               return ElevatedButton(
                 child: const Text('Switch Theme'),
@@ -58,6 +53,26 @@ class SettingPageState extends State<SettingPage> {
               );
             })
           ]),
+    );
+  }
+}
+
+class ChatModel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton(
+      padding: const EdgeInsets.symmetric(horizontal:80),
+      items: SettingDataSource.getModelList()
+          .map((e) => DropdownMenuItem(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 80),
+                  child: Text(e),
+                )
+              ))
+          .toList(),
+      onChanged: (value) {
+        SettingDataSource.saveModel(value!);
+      },
     );
   }
 }
