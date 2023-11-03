@@ -58,20 +58,28 @@ class SettingPage extends StatelessWidget {
 }
 
 class ChatModel extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
-      padding: const EdgeInsets.symmetric(horizontal:80),
+      hint: const Text("Please choose a model",
+        textAlign: TextAlign.center,
+      ),
+      //padding: const EdgeInsets.symmetric(horizontal: 20),
+      value: SettingDataSource.readModel(),
+      style: const TextStyle(color: Colors.green, fontSize: 16.0),
       items: SettingDataSource.getModelList()
           .map((e) => DropdownMenuItem(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
-                  child: Text(e),
-                )
+                  value: e,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(e),
+                  ),
               ))
           .toList(),
       onChanged: (value) {
-        SettingDataSource.saveModel(value!);
+
+       SettingDataSource.saveModel(value.toString());
       },
     );
   }
