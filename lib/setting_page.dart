@@ -1,5 +1,6 @@
 import 'package:chat_gpt_client/Theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'TokenManager.dart';
@@ -12,8 +13,6 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _tokeTextController.text = SettingDataSource.readToken() ?? '';
-    _urlTextController.text = SettingDataSource.readUrl() ?? '';
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -58,29 +57,69 @@ class SettingPage extends StatelessWidget {
 }
 
 class ChatModel extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(
-      hint: const Text("Please choose a model",
-        textAlign: TextAlign.center,
-      ),
-      //padding: const EdgeInsets.symmetric(horizontal: 20),
-      value: SettingDataSource.readModel(),
-      style: const TextStyle(color: Colors.green, fontSize: 16.0),
-      items: SettingDataSource.getModelList()
-          .map((e) => DropdownMenuItem(
-                  value: e,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(e),
-                  ),
-              ))
-          .toList(),
-      onChanged: (value) {
-
-       SettingDataSource.saveModel(value.toString());
-      },
-    );
+    return GetBuilder<ChatModelController>(
+        init: ChatModelController(),
+        builder: (controller) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text("Model"),
+              DropdownButton(
+               value: controller.model,
+                icon: const Icon(Icons.arrow_downward),
+                iconSize: 24,
+                elevation: 16,
+                onChanged: (String? newValue) {
+                  controller.changeModel(newValue!);
+                },
+                items: SettingDataSource.getModelList()
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          );
+        });
   }
 }
+
+class ChatModelController extends GetxController {
+  String token = "";
+  String url = "";
+  String model = "";
+
+
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    token = SettingDataSource.readToken() ?? '';
+    url = SettingDataSource.readUrl() ?? '';
+    model = SettingDataSource.readModel() ?? '';
+  }
+
+  void changeModel(String model) {
+    this.model = model;
+    update();
+    SettingDataSource.saveModel(model);
+  }
+
+  ChatModelController _getInstance() {
+    return ChatModelController._internal();
+  }
+
+  static _internal() {
+    return ChatModelController();
+  }
+}
+
+

@@ -1,7 +1,7 @@
 // Token 管理类
 import 'package:get_storage/get_storage.dart';
 import 'package:get/utils.dart';
-
+// please change SettingDataSource to Provider
 class SettingDataSource {
   static GetStorage storage = GetStorage();
 
