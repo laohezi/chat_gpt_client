@@ -27,10 +27,13 @@ abstract class LLM {
 }
 
 class ChatGpt extends LLM {
-  static final ChatGpt _instance = ChatGpt();
+
+  ChatGpt._privateConstructor();
+  static final ChatGpt _instance = ChatGpt._privateConstructor();
   factory ChatGpt() {
     return _instance;
   }
+
 
   @override
   getResponse(List<Message> messages, ValueChanged<Message> onResponse,
@@ -84,6 +87,8 @@ class ChatGpt extends LLM {
     var message = Message(conversationId: "", text: "", role: Role.assistant);
     return OpenAI.instance.chat.create(model: 'gpt-3.5-turbo', messages: ms);
   }
+
+
 }
 
 extension Convert on Role {

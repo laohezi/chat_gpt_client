@@ -67,7 +67,7 @@ class ChatModel extends StatelessWidget {
             children: <Widget>[
               Text("Model"),
               DropdownButton(
-               value: controller.model,
+                value: controller.model,
                 icon: const Icon(Icons.arrow_downward),
                 iconSize: 24,
                 elevation: 16,
@@ -96,15 +96,14 @@ class ChatModelController extends GetxController {
   String url = "";
   String model = "";
 
-
-
   @override
   void onInit() {
-    // TODO: implement onInit
+
     super.onInit();
+    debugPrint("ChatModelController onInit");
     token = SettingDataSource.readToken() ?? '';
     url = SettingDataSource.readUrl() ?? '';
-    model = SettingDataSource.readModel() ?? '';
+    model = SettingDataSource.readModel() ?? 'gpt-3.5-turbo';
   }
 
   void changeModel(String model) {
