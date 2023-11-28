@@ -10,7 +10,6 @@ class PromptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData currentTheme = Theme.of(context);
-    print(currentTheme);
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: PromptList(),

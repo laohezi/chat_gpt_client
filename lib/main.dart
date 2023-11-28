@@ -49,16 +49,7 @@ class HomePage extends StatelessWidget {
             },
           ),
         ),
-        body: Consumer<NaviModel>(
-          builder: (context, naviModel, child) {
-
-
-            return IndexedStack(
-              index: naviModel.selectedIndex,
-              children: [PromptPage(), ChatPage(), SettingPage()],
-            );
-          },
-        ),
+        body: Body(),
         bottomNavigationBar: BottomNavi(),
       ),
     );
@@ -67,4 +58,18 @@ class HomePage extends StatelessWidget {
 
 class HomeModel extends ChangeNotifier {
   List<String> title = ['Prompt', 'Chat', 'Settings'];
+}
+
+class Body extends StatelessWidget{
+
+  PageController controller = PageController();
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(builder: );
+      PageView(
+      controller: controller,
+      children: [PromptPage(),ChatPage(),SettingPage()],
+    );
+  }
+
 }

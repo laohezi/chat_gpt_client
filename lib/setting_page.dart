@@ -6,52 +6,60 @@ import 'package:provider/provider.dart';
 import 'TokenManager.dart';
 
 class SettingPage extends StatelessWidget {
-  final TextEditingController _tokeTextController = TextEditingController();
-  final TextEditingController _urlTextController = TextEditingController();
+  SettingController controller = Get.put(SettingController());
+
+
 
   SettingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextField(
-              controller: _tokeTextController,
-              decoration: const InputDecoration(
-                labelText: 'Token',
-                hintText: 'Enter your token',
-              ),
-            ),
-            TextField(
-              controller: _urlTextController,
-              decoration: const InputDecoration(
-                labelText: 'BaseUrl',
-                hintText: 'Enter your baseUrl',
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            ChatModel(),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              child: const Text('Save'),
-              onPressed: () {
-                final token = _tokeTextController.text;
-                SettingDataSource.saveToken(token); // 保存 token
-              },
-            ),
-            const SizedBox(height: 16.0),
-            Consumer<ThemeModel>(builder: (context, theme, child) {
-              return ElevatedButton(
-                child: const Text('Switch Theme'),
-                onPressed: () {
-                  theme.switchTheme();
-                },
-              );
-            })
-          ]),
+    return GetBuilder<SettingController>(
+      init: SettingController(),
+      builder: (controller) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextField(
+                  controller: TextEditingController(text: controller.token),
+
+                  decoration: const InputDecoration(
+                    labelText: 'Token',
+                    hintText: 'Enter your token',
+                  ),
+                ),
+                TextField(
+                  controller: TextEditingController(text: controller.url),
+                  decoration: const InputDecoration(
+                    labelText: 'BaseUrl',
+                    hintText: 'Enter your baseUrl',
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                ChatModel(),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  child: const Text('Save'),
+                  onPressed: () {
+
+                    SettingDataSource.saveUrl(controller.url);// 保存 url
+                    SettingDataSource.saveToken(controller.token);// 保存 token
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                Consumer<ThemeModel>(builder: (context, theme, child) {
+                  return ElevatedButton(
+                    child: const Text('Switch Theme'),
+                    onPressed: () {
+                      theme.switchTheme();
+                    },
+                  );
+                })
+              ]),
+        );
+      },
     );
   }
 }
@@ -59,8 +67,8 @@ class SettingPage extends StatelessWidget {
 class ChatModel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChatModelController>(
-        init: ChatModelController(),
+    return GetBuilder<SettingController>(
+        init: SettingController(),
         builder: (controller) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -91,19 +99,18 @@ class ChatModel extends StatelessWidget {
   }
 }
 
-class ChatModelController extends GetxController {
+class SettingController extends GetxController {
   String token = "";
   String url = "";
   String model = "";
 
   @override
   void onInit() {
-
     super.onInit();
     debugPrint("ChatModelController onInit");
     token = SettingDataSource.readToken() ?? '';
     url = SettingDataSource.readUrl() ?? '';
-    model = SettingDataSource.readModel() ?? 'gpt-3.5-turbo';
+    model = SettingDataSource.readModel() ?? 'gpt-3.5turbo';
   }
 
   void changeModel(String model) {
@@ -112,13 +119,4 @@ class ChatModelController extends GetxController {
     SettingDataSource.saveModel(model);
   }
 
-  ChatModelController _getInstance() {
-    return ChatModelController._internal();
-  }
-
-  static _internal() {
-    return ChatModelController();
-  }
 }
-
-

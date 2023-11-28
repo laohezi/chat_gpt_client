@@ -7,7 +7,6 @@ class SettingDataSource {
 
   // 读取 token
   static String readToken() {
-    GetStorage storage = GetStorage();
     return storage.optReadString(
         'token', "fk209928-9pSV6cq5syJO4mUw4Wt7hLv5OgSptQzC");
   }
@@ -18,7 +17,6 @@ class SettingDataSource {
   }
 
   static readUrl() {
-    GetStorage storage = GetStorage();
     return storage.optReadString('url', "https://oa.api2d.net");
   }
 
@@ -27,7 +25,6 @@ class SettingDataSource {
   }
 
   static readModel() {
-    GetStorage storage = GetStorage();
     return storage.optReadString('model', "gpt-3.5-turbo");
   }
 
@@ -36,7 +33,7 @@ class SettingDataSource {
   }
 
   static List<String> getModelList() {
-    List<String> modelList = ["davinci", "curie", "babbage", "ada", "content-filter-alpha-c4", "content-filter-dev"];
+    List<String> modelList = ["gpt-3.5-turbo", "gpt-4"];
     return modelList;
   }
 }
