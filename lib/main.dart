@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'NaviBar/NaviModel.dart';
@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(HomeController());
     return ChangeNotifierProvider(
         create: (_) => ThemeModel(),
         child: Consumer<ThemeModel>(
@@ -34,42 +35,83 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => NaviModel()),
-        ChangeNotifierProvider(create: (context) => HomeModel())
-      ],
-      child: Scaffold(
+
+    return Scaffold(
         appBar: AppBar(
-          title: Consumer2<NaviModel, HomeModel>(
-            builder: (context, naviModel, homeModel, child) {
-              return Text(homeModel.title[naviModel.selectedIndex]);
-            },
+          title:Obx(()=> Text(HomeModel.title[Get.find<HomeController>().currentIndex.value])),
           ),
+
+        body: PageView(
+          controller: Get.find<HomeController>().pageController,
+          children: [
+            const PromptPage(),
+            const ChatPage(),
+            SettingPage(),
+          ],
+          onPageChanged: (index) {
+            Get.find<HomeController>().currentIndex.value = index;
+          },
         ),
-        body: Body(),
-        bottomNavigationBar: BottomNavi(),
-      ),
+        bottomNavigationBar: Obx(() => BottomNavigationBar(
+          currentIndex: Get.find<HomeController>().currentIndex.value,
+          onTap: (index) {
+            Get.find<HomeController>().changePage(index);
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Prompt',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+        ))
     );
+
+
   }
 }
 
-class HomeModel extends ChangeNotifier {
-  List<String> title = ['Prompt', 'Chat', 'Settings'];
+class HomeController extends  GetxController{
+  var currentIndex = 0.obs;
+  var pageController = PageController();
+  void changePage(int index){
+    currentIndex.value = index;
+    pageController.jumpToPage(index);
+  }
 }
 
-class Body extends StatelessWidget{
+class HomeModel extends ChangeNotifier{
+ static List<String> title = ['Prompt', 'Chat', 'Settings'];
+}
 
+
+
+class Body extends StatelessWidget {
   PageController controller = PageController();
+
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: );
-      PageView(
-      controller: controller,
-      children: [PromptPage(),ChatPage(),SettingPage()],
-    );
-  }
 
+      return PageView(
+        children: [
+          PromptPage(),
+          ChatPage(),
+          SettingPage(),
+        ],
+        onPageChanged: (index) {
+
+        },
+      );
+
+  }
 }
