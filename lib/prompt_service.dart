@@ -1,9 +1,10 @@
+import 'package:chat_gpt_client/SettingDataSource.dart';
 import 'package:chat_gpt_client/setting_page.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:chat_gpt_client/model/entities.dart';
+import 'package:get/get.dart';
 
-import 'TokenManager.dart';
 
 
 class PromptService {
@@ -27,7 +28,7 @@ abstract class LLM {
 }
 
 class ChatGpt extends LLM {
-
+ SettingDataSource settingDataSource = Get.find<SettingDataSource>();
   ChatGpt._privateConstructor();
   static final ChatGpt _instance = ChatGpt._privateConstructor();
   factory ChatGpt() {
@@ -67,7 +68,7 @@ class ChatGpt extends LLM {
   @override
   init() {
     OpenAI.baseUrl = "https://oa.api2d.net";
-    OpenAI.apiKey = SettingDataSource.readToken();
+    OpenAI.apiKey = settingDataSource.readToken();
   }
 
   @override

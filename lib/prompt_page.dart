@@ -19,6 +19,7 @@ class PromptPage extends StatelessWidget {
 
 class PromptList extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _PromptListState createState() => _PromptListState();
 }
 

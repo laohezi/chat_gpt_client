@@ -3,36 +3,46 @@ import 'package:get_storage/get_storage.dart';
 import 'package:get/utils.dart';
 // please change SettingDataSource to Provider
 class SettingDataSource {
-  static GetStorage storage = GetStorage();
+  static final SettingDataSource _instance = SettingDataSource._internal();
+  SettingDataSource._internal();
+
+   factory SettingDataSource(){
+    return _instance;
+  }
+
+
+  GetStorage storage = GetStorage();
+
+
 
   // 读取 token
-  static String readToken() {
+  String readToken() {
     return storage.optReadString(
         'token', "fk209928-9pSV6cq5syJO4mUw4Wt7hLv5OgSptQzC");
   }
 
   // 保存 token
-  static saveToken(String token) {
+ saveToken(String token) {
     storage.write('token', token);
   }
 
-  static readUrl() {
+ readUrl() {
     return storage.optReadString('url', "https://oa.api2d.net");
   }
 
-  static saveUrl(String url) {
+  saveUrl(String url) {
     storage.write('url', url);
   }
 
-  static readModel() {
+  readModel() {
     return storage.optReadString('model', "gpt-3.5-turbo");
   }
 
-  static saveModel(String model) {
+ saveModel(String model) {
     storage.write('model', model);
   }
 
-  static List<String> getModelList() {
+ List<String> getModelList() {
     List<String> modelList = ["gpt-3.5-turbo", "gpt-4"];
     return modelList;
   }

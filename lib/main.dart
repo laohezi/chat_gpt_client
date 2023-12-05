@@ -1,22 +1,26 @@
+import 'package:chat_gpt_client/SettingDataSource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
-
-import 'NaviBar/NaviModel.dart';
 import 'Theme.dart';
 import 'chat_page.dart';
 import 'prompt_page.dart';
 import 'setting_page.dart';
 
-void main() {
+void main() async{
+  GetStorage.init();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
   @override
   Widget build(BuildContext context) {
+
+    Get.put(SettingDataSource());
     Get.put(HomeController());
     return ChangeNotifierProvider(
         create: (_) => ThemeModel(),

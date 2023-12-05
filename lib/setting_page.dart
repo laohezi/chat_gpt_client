@@ -3,17 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import 'TokenManager.dart';
+import 'SettingDataSource.dart';
 
 class SettingPage extends StatelessWidget {
   SettingController controller = Get.put(SettingController());
-
-
+  SettingDataSource settingDataSource = Get.find<SettingDataSource>();
+  TextEditingController tokenController = TextEditingController();
+  TextEditingController urlController = TextEditingController();
 
   SettingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    tokenController.text = settingDataSource.readToken() ;
+    urlController.text = settingDataSource.readUrl() ;
+
     return GetBuilder<SettingController>(
       init: SettingController(),
       builder: (controller) {
@@ -23,7 +27,7 @@ class SettingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextField(
-                  controller: TextEditingController(text: controller.token),
+                  controller: tokenController,
 
                   decoration: const InputDecoration(
                     labelText: 'Token',
@@ -31,7 +35,7 @@ class SettingPage extends StatelessWidget {
                   ),
                 ),
                 TextField(
-                  controller: TextEditingController(text: controller.url),
+                  controller: urlController,
                   decoration: const InputDecoration(
                     labelText: 'BaseUrl',
                     hintText: 'Enter your baseUrl',
@@ -43,9 +47,8 @@ class SettingPage extends StatelessWidget {
                 ElevatedButton(
                   child: const Text('Save'),
                   onPressed: () {
-
-                    SettingDataSource.saveUrl(controller.url);// 保存 url
-                    SettingDataSource.saveToken(controller.token);// 保存 token
+                    controller.changeToken(tokenController.text);
+                    controller.changeUrl(urlController.text);
                   },
                 ),
                 const SizedBox(height: 16.0),
@@ -65,6 +68,7 @@ class SettingPage extends StatelessWidget {
 }
 
 class ChatModel extends StatelessWidget {
+  SettingDataSource settingDataSource = Get.find<SettingDataSource>();
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SettingController>(
@@ -82,13 +86,13 @@ class ChatModel extends StatelessWidget {
                 onChanged: (String? newValue) {
                   controller.changeModel(newValue!);
                 },
-                items: SettingDataSource.getModelList()
+                items: settingDataSource.getModelList()
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
                       value,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   );
                 }).toList(),
@@ -100,23 +104,37 @@ class ChatModel extends StatelessWidget {
 }
 
 class SettingController extends GetxController {
+
   String token = "";
   String url = "";
   String model = "";
+  SettingDataSource settingDataSource = Get.find<SettingDataSource>();
 
   @override
   void onInit() {
     super.onInit();
     debugPrint("ChatModelController onInit");
-    token = SettingDataSource.readToken() ?? '';
-    url = SettingDataSource.readUrl() ?? '';
-    model = SettingDataSource.readModel() ?? 'gpt-3.5turbo';
+    token = settingDataSource.readToken() ?? '';
+    url = settingDataSource.readUrl() ?? '';
+    model = settingDataSource.readModel() ?? 'gpt-3.5turbo';
+    debugPrint("selected model is $model");
   }
 
   void changeModel(String model) {
     this.model = model;
     update();
-    SettingDataSource.saveModel(model);
+    settingDataSource.saveModel(model);
+  }
+
+  void changeUrl(String url){
+    this.url = url;
+    update();
+    settingDataSource.saveUrl(url);
+  }
+  void changeToken(String token){
+    this.token = token;
+    update();
+    settingDataSource.saveUrl(token);
   }
 
 }
