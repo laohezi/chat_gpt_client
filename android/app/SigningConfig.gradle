@@ -1,0 +1,20 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    signingConfigs {
+        debug {
+            storeFile file('C:/Users/miaoc/.android/daye.keystore')
+            storePassword 'yoxisinei145'
+            keyAlias 'daye'
+            keyPassword 'yoxisinei145'
+        }
+
+        releae{
+            storeFile file('C:/Users/miaoc/.android/daye.keystore')
+            storePassword 'yoxisinei145'
+            keyAlias 'daye'
+            keyPassword 'yoxisinei145'
+        }
+    }
+}

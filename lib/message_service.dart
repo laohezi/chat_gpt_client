@@ -8,6 +8,7 @@ import 'prompt_service.dart';
 class MessageModel {
 
   MessageModel();
+  List<Message> messages = [];
 
   String conversationId = "";
    getMessages(ValueChanged<Message> onResponse, ValueChanged<Message> onError, ValueChanged<Message> onSuccess) async {
@@ -16,7 +17,7 @@ class MessageModel {
     ChatGpt().getResponse(messages, onResponse,onError,onSuccess);
   }
 
-   Future<OpenAIChatCompletionModel> getMessagesSync(String  text) async {
+   Future<Message> getMessagesSync(String  text) async {
     List<Message> messages = [Message(conversationId: this.conversationId, text: text, role:Role.assistant )];
     return ChatGpt().getResponseSync(messages);
   }

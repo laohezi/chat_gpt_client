@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
           controller: homeController.pageController,
           children: [
             const PromptPage(),
-            const ChatPage(),
+            ChatPage(),
             SettingPage(),
           ],
           onPageChanged: (index) {

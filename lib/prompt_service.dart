@@ -23,7 +23,7 @@ class PromptService {
 abstract class LLM {
   getResponse(List<Message> messages, ValueChanged<Message> onResponse,
       ValueChanged<Message> onError, ValueChanged<Message> onSuccess);
-  Future<OpenAIChatCompletionModel> getResponseSync(List<Message> messages);
+  Future<Message> getResponseSync(List<Message> messages);
   init();
 }
 
@@ -67,14 +67,13 @@ class ChatGpt extends LLM {
 
   @override
   init() {
-    OpenAI.baseUrl = "https://oa.api2d.net";
+    OpenAI.baseUrl = settingDataSource.readUrl();
     OpenAI.apiKey = settingDataSource.readToken();
   }
 
   @override
-  Future<OpenAIChatCompletionModel> getResponseSync(List<Message> messages) {
+  Future<Message> getResponseSync(List<Message> messages) {
     OpenAI.instance.model.list();
-
     List<OpenAIChatCompletionChoiceMessageModel> ms = [];
     String content = "";
     for (Message message in messages) {
@@ -85,7 +84,6 @@ class ChatGpt extends LLM {
               role: message.role.asOpenAIChatMessageRole,
               content: message.text));
     }
-    var message = Message(conversationId: "", text: "", role: Role.assistant);
     return OpenAI.instance.chat.create(model: 'gpt-3.5-turbo', messages: ms);
   }
 
@@ -106,3 +104,14 @@ extension Convert on Role {
     }
   }
 }
+
+extension Convert2 on Message {
+  OpenAIChatCompletionChoiceMessageModel get asOpenAIChatCompletionChoiceMessageModel {
+    return OpenAIChatCompletionChoiceMessageModel(
+      role: role.asOpenAIChatMessageRole,
+      content: text,
+    );
+  }
+}
+
+
