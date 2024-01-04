@@ -40,10 +40,14 @@ dependencies:
   get_it: ^7.2.0
   path_provider: ^2.0.13
   sqflite: ^2.2.6
-  dart_openai: ^1.9.9
+  dart_openai: ^5.0.0
   markdown_widget: ^2.2.0
   get: ^4.6.5
   get_storage:
+
+dependency_overrides:
+  collection: ^1.17.2
+
 
 dev_dependencies:
   flutter_test:

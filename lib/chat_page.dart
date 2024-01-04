@@ -4,10 +4,13 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import 'message_service.dart';
+import 'model/entities.dart';
 
 class ChatPage extends StatelessWidget {
   static const routeName = '/chat';
   ChatPageController controller = Get.put(ChatPageController());
+  MessageModel model  = Get.put(MessageModel());
+
 
   ChatPage({super.key});
 
@@ -42,7 +45,13 @@ class ChatPage extends StatelessWidget {
 
 class ChatPageController extends GetxController {
   final messageController = TextEditingController();
-  final model = MessageModel();
+  final messageList = <Message>[].obs;
+  final model = Get.find<MessageModel>();
+  var curentMessage = model.currentResponse;
+
+  void sendRequest(){
+    model.getMessages(messageController.text);
+  }
 
 
 }

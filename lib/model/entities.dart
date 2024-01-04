@@ -8,12 +8,12 @@ enum Role {
 
 class Message {
   int? id;
-  String conversationId;
+  String ? conversationId;
   Role role;
   String text;
   Message(
       {this.id,
-        required this.conversationId,
+         this.conversationId,
         required this.text,
         required this.role});
   Map<String, dynamic> toMap() {
