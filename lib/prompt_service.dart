@@ -20,14 +20,9 @@ class PromptService {
   }
 }
 
-abstract class LLM {
-  getResponse(List<Message> messages, ValueChanged<Message> onResponse,
-      ValueChanged<Message> onError, ValueChanged<Message> onSuccess);
-  Future<Message> getResponseSync(List<Message> messages);
-  init();
-}
 
-class ChatGpt extends LLM {
+
+class ChatGpt{
  SettingDataSource settingDataSource = Get.find<SettingDataSource>();
   ChatGpt._privateConstructor();
   static final ChatGpt _instance = ChatGpt._privateConstructor();
@@ -35,56 +30,23 @@ class ChatGpt extends LLM {
     return _instance;
   }
 
-
-  @override
-  getResponse(List<Message> messages, ValueChanged<Message> onResponse,
-      ValueChanged<Message> onError, ValueChanged<Message> onSuccess) {
-    OpenAI.instance.model.list();
-
+ Stream<OpenAIStreamChatCompletionModel> getResponse(List<Message> messages) {
     List<OpenAIChatCompletionChoiceMessageModel> ms = [];
-    String content = "";
     for (Message message in messages) {
-      content = content + message.text;
       ms.insert(
           0,
           OpenAIChatCompletionChoiceMessageModel(
               role: message.role.asOpenAIChatMessageRole,
               content: message.text));
     }
-    var message = Message(conversationId: "", text: "", role: Role.assistant);
     Stream<OpenAIStreamChatCompletionModel> stream =
-        OpenAI.instance.chat.createStream(model: 'gpt-3.5-turbo', messages: ms);
-
-    stream.listen((event) {
-      if (event.choices.first.delta.content != null) {
-        message.text = message.text + event.choices.first.delta.content!;
-        onResponse(message);
-      }
-    }, onDone: () {
-      onSuccess(message);
-    });
+        OpenAI.instance.chat.createStream(model: settingDataSource.readModel() , messages: ms);
+    return stream;
   }
 
-  @override
   init() {
     OpenAI.baseUrl = settingDataSource.readUrl();
     OpenAI.apiKey = settingDataSource.readToken();
-  }
-
-  @override
-  Future<Message> getResponseSync(List<Message> messages) {
-    OpenAI.instance.model.list();
-    List<OpenAIChatCompletionChoiceMessageModel> ms = [];
-    String content = "";
-    for (Message message in messages) {
-      content = content + message.text;
-      ms.insert(
-          0,
-          OpenAIChatCompletionChoiceMessageModel(
-              role: message.role.asOpenAIChatMessageRole,
-              content: message.text));
-    }
-    return OpenAI.instance.chat.create(model: 'gpt-3.5-turbo', messages: ms);
   }
 
 
