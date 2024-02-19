@@ -19,7 +19,11 @@ class MessageModel {
   getMessages() async {
     // Mock data
     List<Message> messages = [];
-    ChatGpt().getResponse(messages).listen((event) {});
+    ChatGpt().getResponse(messages).listen((event) {
+
+    },onDone: (){
+
+    },onError: (){});
   }
 
   MessageModel._internal() {
