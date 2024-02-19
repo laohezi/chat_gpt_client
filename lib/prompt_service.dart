@@ -30,14 +30,12 @@ class ChatGpt{
     return _instance;
   }
 
- Stream<OpenAIStreamChatCompletionModel> getResponse(List<Message> messages) {
+ Stream<OpenAIStreamChatCompletionModel> getResponse(List messages) {
     List<OpenAIChatCompletionChoiceMessageModel> ms = [];
     for (Message message in messages) {
       ms.insert(
           0,
-          OpenAIChatCompletionChoiceMessageModel(
-              role: message.role.asOpenAIChatMessageRole,
-              content: message.text));
+          message.asOpenAIChatCompletionChoiceMessageModel);
     }
     Stream<OpenAIStreamChatCompletionModel> stream =
         OpenAI.instance.chat.createStream(model: settingDataSource.readModel() , messages: ms);
@@ -45,6 +43,7 @@ class ChatGpt{
   }
 
   init() {
+    OpenAI.showLogs = true;
     OpenAI.baseUrl = settingDataSource.readUrl();
     OpenAI.apiKey = settingDataSource.readToken();
   }
@@ -71,7 +70,9 @@ extension Convert2 on Message {
   OpenAIChatCompletionChoiceMessageModel get asOpenAIChatCompletionChoiceMessageModel {
     return OpenAIChatCompletionChoiceMessageModel(
       role: role.asOpenAIChatMessageRole,
-      content: text,
+      content:[
+       OpenAIChatCompletionChoiceMessageContentItemModel.text(text)
+      ] ,
     );
   }
 }

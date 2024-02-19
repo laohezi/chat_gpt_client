@@ -8,8 +8,9 @@ import 'model/entities.dart';
 
 class ChatPage extends StatelessWidget {
   static const routeName = '/chat';
-  ChatPageController controller = Get.put(ChatPageController());
   MessageModel model  = Get.put(MessageModel());
+  ChatPageController controller = Get.put(ChatPageController());
+
 
 
   ChatPage({super.key});
@@ -19,10 +20,16 @@ class ChatPage extends StatelessWidget {
     return GetBuilder<ChatPageController>(
       builder: (_) {
         return Column(children: [
-          const Expanded(
-            child:Text("lala"),
+           Expanded(
+            child: Obx(() => ListView.builder(
+              itemCount: model.history.length,
+              itemBuilder: (context, index) {
+                return Text(model.history[index].text);
+              },
+            ).build(context))
           ),
         //输入框和发送button
+        Obx(() => Text(model.currentMessage.value)),
         Row(children: [
           Expanded(
             child: TextField(
@@ -35,7 +42,9 @@ class ChatPage extends StatelessWidget {
               ),
             )
           ),
-          ElevatedButton(onPressed: () {}, child: const Text("Send"))
+          ElevatedButton(onPressed: () {
+            controller.sendRequest();
+          }, child: const Text("Send"))
         ])
         ]);
       },
@@ -47,7 +56,7 @@ class ChatPageController extends GetxController {
   final messageController = TextEditingController();
   final messageList = <Message>[].obs;
   final model = Get.find<MessageModel>();
-  var curentMessage = model.currentResponse;
+
 
   void sendRequest(){
     model.getMessages(messageController.text);
